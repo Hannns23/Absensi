@@ -1,0 +1,11 @@
+TAP-KARTU-BANK-SAMPAJ-RFID/
+├── firmware/                  # Kode program mikrokontroler ESP32 (.ino)
+│   └── esp32_bank_sampah.ino
+├── apps-script/               # Kode backend Google Spreadsheet & Sidebar Admin
+│   ├── Code.gs
+│   └── index.html
+├── public/                    # Aset statis, logo, dan favicon[cite: 1]
+├── src/                       # Source code website monitoring (React + TypeScript)[cite: 1]
+├── .env.example               # Contoh konfigurasi environment variable[cite: 1]
+├── package.json               # Daftar dependensi proyek[cite: 1]
+└── vite.config.ts             # Konfigurasi bundler Vite[cite: 1]
