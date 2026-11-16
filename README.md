@@ -1,34 +1,35 @@
-# ♻️ TAP-KARTU-BANK-SAMPAJ-RFID
+# 📋 Sistem Absensi Pengajar Berbasis RFID & IoT
 
-**Website monitoring untuk melihat kelas mana saja yang sudah buang sampah kelasnya ke bank sampah** menggunakan integrasi kartu **RFID (ESP32)**, **Google Sheets API (Apps Script)**, dan **Web Dashboard**.
-
-🔗 **Live Demo:** [tap-kartu-bank-sampaj-rfid.vercel.app](https://tap-kartu-bank-sampaj-rfid.vercel.app)[cite: 1]
-
----
-
-## 📌 Latar Belakang & Tujuan
-Sistem ini dirancang untuk mendigitalisasi pencatatan setor sampah tiap kelas di lingkungan sekolah/kampus. Setiap pengurus kelas dibekali **Kartu RFID khusus kelas**. Saat menyetorkan sampah ke Bank Sampah, petugas/pengurus kelas cukup menempelkan (*tap*) kartu ke perangkat pembaca RFID berbasis ESP32, dan status kelas tersebut akan langsung tercatat secara *real-time* di Google Spreadsheet maupun halaman website monitoring ini[cite: 1].
+Website monitoring dan sistem pencatatan kehadiran pengajar (guru/dosen) secara *real-time* menggunakan kartu **RFID (ESP32)**, **Google Sheets API (Apps Script)**, dan **Dashboard Web (React + TypeScript + Vite)** yang di-deploy di **Vercel**.
 
 ---
 
 ## ✨ Fitur Utama
-- **Tap Kartu RFID Real-Time:** Pembacaan UID kartu kelas menggunakan modul RFID RC522 dan mikrokontroler ESP32.
-- **Indikator Audio & Visual:** Layar LCD I2C 16x2 menampilkan nama kelas & status setoran disertai bunyi Buzzer berbeda (Berhasil Setor, Sudah Setor Hari Ini, atau Kartu Belum Terdaftar).
-- **Mode Registrasi Kartu Langsung:** Tombol mode pada perangkat untuk mendaftarkan kartu kelas baru langsung ke database tanpa mengubah kode program.
-- **Database Google Sheets & Panel Admin UI:** Penyimpanan otomatis ke Google Spreadsheet lengkap dengan *Sidebar Admin* untuk mengubah nama kartu kelas dan memantau rekap harian.
-- **Website Monitoring Kelas:** Dashboard berbasis web (React + TypeScript + Vite) untuk memantau daftar kelas yang **Sudah Buang Sampah** dan **Belum Buang Sampah** pada hari berjalan[cite: 1].
+- **Absensi Kartu RFID Real-Time:** Pembacaan UID kartu identitas pengajar menggunakan modul RFID RC522 dan ESP32.
+- **Deteksi Otomatis Masuk, Terlambat, & Pulang:** Menentukan status kehadiran secara otomatis berdasarkan batas jam masuk yang dapat diatur oleh admin serta membedakan tap pertama (Masuk/Terlambat) dan tap kedua (Pulang).
+- **Indikator LCD I2C & Buzzer:** Layar LCD 16x2 menampilkan jam digital NTP saat *standby* serta nama pengajar dan status absensi saat kartu ditempelkan, lengkap dengan pola bunyi buzzer yang berbeda.
+- **Tombol Mode Registrasi Kartu:** Mendaftarkan kartu RFID pengajar baru langsung dari perangkat ESP32 ke sheet `Master_Pengajar`.
+- **Panel Admin Spreadsheet & Dashboard Web:** Pengelola dapat mengubah batas jam masuk dan melengkapi nama pengajar langsung dari Sidebar Google Sheets, sementara status kehadiran tampil langsung di website Vercel.
 
 ---
 
-## 🛠️ Arsitektur Sistem
-```text
-[Kartu RFID Kelas] 
-       │ (Tap Kartu)
-       ▼
-[ESP32 + RC522 + LCD I2C + Buzzer] 
-       │ (HTTP GET Request via WiFi)
-       ▼
-[Google Apps Script (Web App API)] ◄──► [Google Spreadsheet (Database & Admin UI)]
-       │ (JSON / CSV Data Feed)
-       ▼
-[Website Monitoring (Vercel - React/Vite)]
+## 🔌 Wiring Hardware (ESP32)
+
+| Komponen | Pin Modul | Pin ESP32 |
+| :--- | :--- | :--- |
+| **RFID RC522** | SDA (SS) | `GPIO 5` |
+| | SCK | `GPIO 18` |
+| | MOSI | `GPIO 23` |
+| | MISO | `GPIO 19` |
+| | RST | `GPIO 4` |
+| | 3.3V / GND | `3V3` / `GND` |
+| **LCD I2C 16x2** | SDA / SCL | `GPIO 21` / `GPIO 22` |
+| | VCC / GND | `VIN (5V)` / `GND` |
+| **Buzzer Aktif** | Positif (+) / Negatif (-) | `GPIO 15` / `GND` |
+| **Push Button Mode** | Kaki 1 / Kaki 2 | `GPIO 14` / `GND` |
+
+---
+
+## 🚀 Konfigurasi Deployment Vercel
+1. Pastikan variabel lingkungan **`VITE_APPS_SCRIPT_URL`** sudah ditambahkan di menu **Settings > Environment Variables** pada proyek Vercel dengan nilai URL Web App (`/exec`) dari Google Apps Script.
+2. Setiap perubahan pada branch `main` di GitHub akan otomatis ter-deploy ke Vercel.
